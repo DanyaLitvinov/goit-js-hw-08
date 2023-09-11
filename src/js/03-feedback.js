@@ -1,4 +1,3 @@
-// Get the text field that we're going to track
 import throttle from 'lodash.throttle';
 const LOCAL_STORAGE_KEY = 'feedback-form-state';
 
@@ -18,16 +17,22 @@ function onForm(e) {
 
 function onSubmit(e) {
   e.preventDefault();
-  e.target.reset();
-  localStorage.removeItem(LOCAL_STORAGE_KEY);
-  console.log(formData);
+
+  if (form.email.value && form.message.value) {
+    console.log(formData);
+
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    form.reset();
+    formData = {};
+  } else {
+    alert('Please fill in all fields before submitting.');
+  }
 }
 
 function checkData() {
-  if (localStorage.length > 0) {
-    formData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
-    form.email.value = formData.email;
-    form.message.value = formData.message;
-  } return ""
-
+  if (localStorage.getItem(LOCAL_STORAGE_KEY)) {
+    formData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+    form.email.value = formData.email || '';
+    form.message.value = formData.message || '';
+  }
 }
